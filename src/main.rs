@@ -14,6 +14,8 @@ fn main() {
     window.on_picked(move |weapon| {
         let mut pc_pick = pc_clone.borrow_mut();
         *pc_pick = 2;
+
+        println!("You picked {weapon}!! i see ya :D");
     });
 
     window.run().unwrap();
