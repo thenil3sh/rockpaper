@@ -53,29 +53,39 @@ enum Weapon {
 export component AppWindow inherits Window {
     callback picked(int);
     in property <bool> imgVis: true;
+    in property <int> winning;
     property <color> testcolor: #282828;
     property <bool> weapon_pressed: ta.pressed || ta2.pressed || ta3.pressed;
     property <float> value: weapon_pressed ? 4 : 4;
     property <float> on_select_opacity: 1;
     property <float> win_count;
-    in property <float> next_round_opacity : 1;
+    in property <float> next_round_opacity: 1;
+
+    in property <int> standing: pc_score == 0 && yr_score == 1 ? 9 : yr_score - pc_score;
+    in property <int> pc_score;
+    in property <int> yr_score;
+    in property <int> yr_pick: 0;
+    in property <int> pc_pick: 0;
+    in property <bool> last_round : false;
+
     callback match_selected(int);
     callback setup_table();
-    in property <bool> start_passive : Rounder.y > 140px;
+    in property <bool> start_passive: Rounder.y > 140px;
     width: 600px;
     height: 450px;
     background: #282828;
     title: "Rock Paper";
     one_point_five := Timer {
-        interval : 1.5s;
+        interval: 1.5s;
         running: false;
         triggered => {
             setup_table();
             setupWep.running = true;
         }
     }
+
     one_sec := Timer {
-        interval : 1000ms;
+        interval: 1000ms;
         running: false;
         triggered => {
             NextScreen.visible = false;
@@ -84,17 +94,19 @@ export component AppWindow inherits Window {
             self.running = false;
         }
     }
+
     NextScreen := Rectangle {
-        visible : false;
+        visible: true;
         Rounder := Text {
-            opacity : next_round_opacity;
-            x : 337px;
-            y : 150px;//51px;//84px;//117px;//150px;
+            opacity: next_round_opacity;
+            x: 337px;
+            y: 150px;
+            //51px;//84px;//117px;//150px;
             horizontal-alignment: center;
             font-size: 25px;
             font-family: "JetBrains Mono NL";
-            color : #d65d0e;
-            text : "_\na\n2\n5\n9";
+            color: #d65d0e;
+            text: "_\na\n2\n5\n9";
             rounds := TouchArea {
                 clicked() => {
                     if self.pressed-y > 0 && self.pressed-y < 33px {
@@ -103,76 +115,79 @@ export component AppWindow inherits Window {
                         Rounder.y = 117px;
                     } else if self.pressed-y > 66px && self.pressed-y < 99px {
                         Rounder.y = 84px;
-                    } else if self.pressed-y > 99px && self.pressed-y < 132px  {
+                    } else if self.pressed-y > 99px && self.pressed-y < 132px {
                         Rounder.y = 51px;
                     } else if self.pressed-y > 132px && self.pressed-y < self.height {
                         Rounder.y = 17px;
                     }
                 }
             }
+
             animate y, opacity {
                 duration: 250ms;
                 easing: ease-out-back;
             }
         }
-        Rectangle {
-            opacity : 0.5;
-            height : 150px;
-            y : 0px;
-            background: #282828;
-        }
-        Rectangle {
-            opacity : 0.5;
-            y  : 183px;
-            background: #282828;
 
+        Rectangle {
+            opacity: 0.5;
+            height: 150px;
+            y: 0px;
+            background: #282828;
         }
+
+        Rectangle {
+            opacity: 0.5;
+            y: 183px;
+            background: #282828;
+        }
+
         Text {
-            opacity : next_round_opacity;
-            y : 150px;
-            text : "Next round for   win(s) ?";
+            opacity: next_round_opacity;
+            y: 150px;
+            text: "Next round for   win(s) ?";
             font-size: 25px;
             font-family: "JetBrains Mono NL";
-            color : #ebdbb2;
+            color: #ebdbb2;
             animate opacity {
                 duration: 250ms;
                 easing: ease-out-back;
             }
         }
-        
-        
+
         startBtn := Rectangle {
-            y : start_passive ? 350px : Start.pressed ? 300px : Start.has-hover ? 295px : 300px;
-            opacity : start_passive ? 0 : 1;
+            y: start_passive ? 350px : Start.pressed ? 300px : Start.has-hover ? 295px : 300px;
+            opacity: start_passive ? 0 : 1;
             background: start_passive ? #d65d0e00 : #d65d0e;
             drop-shadow-blur: start_passive ? 15px : 100px;
             drop-shadow-color: #1d2021;
-            width : start_passive ? 100px : Start.pressed ? 140px : Start.has-hover ? 150px : 140px;
+            width: start_passive ? 100px : Start.pressed ? 140px : Start.has-hover ? 150px : 140px;
             border-radius: 15px;
-            height : start_passive ? 30px : Start.pressed ? 65px : Start.has-hover ? 75px : 65px ;
+            height: start_passive ? 30px : Start.pressed ? 65px : Start.has-hover ? 75px : 65px;
             Image {
-                x : 20px;
-                source : @image-url("./play.png");
-                width : 25px;
+                x: 20px;
+                source: @image-url("./play.png");
+                width: 25px;
             }
+
             Text {
-                x : Start.pressed ? 60px : Start.has-hover ? 70px : 60px;
-                text : "Start";
+                x: Start.pressed ? 60px : Start.has-hover ? 70px : 60px;
+                text: "Start";
                 font-size: 20px;
-                color : #282828;
+                color: #282828;
                 font-family: "JetBrains Mono";
                 animate x {
-                    duration : 250ms;
+                    duration: 250ms;
                     easing: ease-out-back;
                 }
             }
+
             animate y, drop-shadow-blur, drop-shadow-color, height, width, opacity, background {
-                duration : 250ms;
+                duration: 250ms;
                 easing: ease-out-back;
-    
             }
             Start := TouchArea {
-                clicked () => {
+                clicked() => {
                     starter.running = true;
                     one_sec.running = true;
                     one_point_five.running = true;
@@ -182,14 +197,15 @@ export component AppWindow inherits Window {
         }
 
         peep := Text {
-            visible : false;
-            text : Rounder.y /1px;
-            font-size : 30px;
+            visible: false;
+            text: Rounder.y / 1px;
+            font-size: 30px;
             color: white;
         }
     }
+
     starter := Timer {
-        interval : 500ms;
+        interval: 500ms;
         running: false;
         triggered => {
             if Rounder.y == 150px {
@@ -203,9 +219,9 @@ export component AppWindow inherits Window {
                 match_selected(9);
             }
             self.running = false;
-            
         }
     }
+
     timer := Timer {
         interval: 250ms;
         running: weapon_pressed;
@@ -291,37 +307,40 @@ export component AppWindow inherits Window {
             } else if value == 0 {
                 counter.y = -135px;
                 if ta.pressed {
-                    picked(1);
+                    picked(0);
                 } else if ta2.pressed {
-                    picked(2);
+                    picked(1);
                 } else if ta3.pressed {
-                    picked(3);
+                    picked(2);
                 }
-            } else if value == -1 {
+                result-imer.running = true;
+                WeaponScreen.passive = true;
+            } else if value < -0.5 {
+                WeaponScreen.visible = false;
+                value = 3.0;
             }
         }
     }
 
-    property <int> weapon_time : 0;
+    property <int> weapon_time: 0;
     setupWep := Timer {
-        interval: 250ms;
+        interval: 100ms;
         running: false;
         triggered => {
-            weapon_time += 25;
-            if weapon_time == 25 {
+            weapon_time += 1;
+            if weapon_time == 1 {
                 WeaponScreen.opacity = 1;
                 btn3.rock_passive = false;
             }
         }
-        
     }
-    in property <int> weapon_opacity : 0;
+
+    in property <int> weapon_opacity: 0;
     WeaponScreen := Rectangle {
+        property <bool> passive: false;
         visible: false;
-        opacity : weapon_opacity;
-        animate opacity {
-            duration : 100ms;
-        }
+        opacity: weapon_opacity;
+        animate opacity { duration: 100ms; }
         Text {
             horizontal-alignment: center;
             color: #fe8019;
@@ -370,25 +389,9 @@ export component AppWindow inherits Window {
             y: root.height * 3 / 4 + 40px;
         }
 
-        Rectangle {
-            opacity: 30%;
-            y: ta.has-hover ? - root.height : root.height;
-            background: @linear-gradient(180deg, rgba(214,93,14,0) 0%, rgba(204,36,29,1) 36%, rgba(204,36,29,0.7455182756696428) 54%, rgba(214,93,14,0) 100%);
-            height: 2 * root.height;
-            animate y {
-                duration: 500ms;
-                easing: ease-out;
-            }
-        }
-
-        Image {
-            visible: imgVis;
-            source: @image-url("./lose_back.png");
-        }
-
         background: #282828;
         btn2 := Rectangle {
-            opacity: on_select_opacity;
+            opacity: passive ? 0 : 1;
             background: #d65d0e;
         // visible: false;
         width: ta2.has-hover ? 137.5px : 125px;
@@ -397,13 +400,14 @@ export component AppWindow inherits Window {
             drop-shadow-blur: 50px;
             drop-shadow-color: ta2.has-hover ? #fe801910 : #1d2021;
             x: ta2.has-hover ? 399.75px : 389.25px;
-            y: ta2.has-hover ? 141.25px : 162.5px;
+            y: ta2.has-hover ? 141.25px : passive ? 200px : 162.5px;
             drop-shadow-offset-x: ta2.has-hover ? - 7.75px : - 5px;
             drop-shadow-offset-y: ta2.has-hover ? 21.25px : 0px;
 
             scissImg := Image {
                 source: @image-url("./scissors.png");
                 height: 70px;
+                rotation-origin-y: 60px;
 
                 animate rotation-angle {
                     duration: 250ms;
@@ -430,11 +434,10 @@ export component AppWindow inherits Window {
         }
 
         btn3 := Rectangle {
-            property <bool> rock_passive : true;
-            property <length> rockx : ta3.has-hover ? 66.75px : rock_passive ? 100px : 87.5px;
-            property <length> rocky : ta3.has-hover ? 141.25px : rock_passive ?
-            180px : 162.5px;
-            opacity: rock_passive ? 0.5 : 1;
+            property <bool> rock_passive: true;
+            property <length> rockx: ta3.has-hover ? 66.75px : rock_passive ? 100px : 87.5px;
+            property <length> rocky: ta3.has-hover ? 141.25px : rock_passive ? 180px : passive ? 200px : 162.5px;
+            opacity: passive ? 0 : 1;
             background: #d65d0e;
         // visible: false;
         width: ta3.has-hover ? 137.5px : 125px;
@@ -448,6 +451,7 @@ export component AppWindow inherits Window {
             drop-shadow-offset-y: ta3.has-hover ? 21.25px : 0px;
             rockImg := Image {
                 source: @image-url("./rock.png");
+                rotation-origin-y: 50px;
                 width: 60px;
                 animate rotation-angle, opacity {
                     duration: 250ms;
@@ -474,7 +478,7 @@ export component AppWindow inherits Window {
         }
 
         btn := Rectangle {
-            opacity: on_select_opacity;
+            opacity: passive ? 0 : 1;
             background: #d65d0e;
             width: ta.has-hover ? 137.5px : 125px;
             height: ta.has-hover ? 137.5px : 125px;
@@ -482,7 +486,7 @@ export component AppWindow inherits Window {
             drop-shadow-blur: 50px;
             drop-shadow-color: ta.has-hover ? #fe801910 : #1d2021;
             x: ta.has-hover ? 231.25px : 237.5px;
-            y: ta.has-hover ? 141.25px : 162.5px;
+            y: ta.has-hover ? 141.25px : passive ? 200px : 162.5px;
             drop-shadow-offset-y: ta.has-hover ? 21.25px : 0px;
         // visible : false;
         
@@ -490,6 +494,7 @@ export component AppWindow inherits Window {
                 x: 3px + (parent.width - self.width) / 2;
                 source: @image-url("./paper.png");
                 width: 65px;
+                rotation-origin-y: 55px;
                 animate rotation-angle {
                     duration: 250ms;
                     easing: ease-in-out-back;
@@ -525,7 +530,7 @@ export component AppWindow inherits Window {
         }
 
         Text {
-            text: value ;
+            text: value;
             color: white;
             x: 0;
             y: 0;
@@ -533,35 +538,387 @@ export component AppWindow inherits Window {
     }
 
     resutlScr := Rectangle {
-        Timer {
-            interval : 100ms;
-        }
 
-        userFace := Rectangle {
-            width : 125px;
-            background : #fe8019;
-            height : 125px;
-            border-radius: 30px;
-            drop-shadow-blur: 50px;
-            drop-shadow-color: #1d2021;
-            x : 75px;
-            Image {
-                source: @image-url("./Untitled(3).png");
-                width : 75px;
+        in-out property <bool> result_a: true;
+        property <bool> passive;
+        property <int> pc_hand: 1;
+        property <string> yr_hand: "./res_sci.png";
+        property <int> result_time: 0;
+        opacity: 0;
+        visible: false;
+        y: passive ? - 50px : 0px;
+        Rectangle {
+            opacity: !result_a ? 0 : 0.8;
+            y: !result_a ? 450px : - 1.2 * 450px;
+            height: root.height * 2;
+            background: @linear-gradient(180deg, rgba(80,73,69,0) 0%, rgba(80,73,69,1) 36%, rgba(80,73,69,0.7763306005996149) 54%, rgba(40,40,40,0) 100%);
+            animate y {
+                delay: 100ms;
+                duration: 700ms;
+                easing: ease-out;
             }
         }
 
+        Image {
+            visible : winning == 0;
+            source: @image-url("./win_back.png");
+            height : root.height;
+        }
+        Image {
+            visible : winning == 1;
+            source: @image-url("./lose_back.png");
+            height : root.height;
+        }
+        Image {
+            visible : winning == 2;
+            source: @image-url("./pap_back.png");
+            height : root.height;
+        }
+        Image {
+            visible : winning == 3;
+            source: @image-url("./sci_back.png");
+            height : root.height;
+        }
+        Image {
+            visible : winning == 4;
+            source  : @image-url("./roc_back.png");
+            height : root.height;
+        }
+
+        result_out := Timer {
+            property <int> value: 0;
+            interval: 100ms;
+            running: false;
+            triggered => {
+                value += 1;
+                if value == 5 {
+                    passive = true;
+                    nextBtn.next_passive = true;
+                    resutlScr.opacity = 0;
+                } else if value == 7 {
+                } else if value == 10 {
+                    resutlScr.visible = false;
+                    WeaponScreen.visible = true;
+                    WeaponScreen.passive = false;
+                    value = 0;
+                    self.running = false;
+                }
+            }
+        }
+
+        result_imer := Timer {
+            interval: 100ms;
+            running: false;
+            triggered => {
+                result_time += 1;
+                if result_time == 1 {
+                    WeaponScreen.visible = false;
+                    resutlScr.visible = true;
+                    result_a = false;
+                    passive = true;
+                } else if result_time == 3 {
+                    resutlScr.opacity = 1;
+                    passive = false;
+                } else if result_time == 20 {
+                    result_a = true;
+                } else if result_time > 25 {
+                    nextBtn.next_passive = false;
+                    result_time = 0;
+                    self.running = false;
+                }
+            }
+        }
+
+        animate y {
+            duration: 300ms;
+            easing: ease-out-back;
+        }
+        animate opacity {
+            duration: 200ms;
+            easing: ease-out;
+        }
+
+        Rectangle {
+            width: 175px;
+            height: 100px;
+            you := Text {
+                text: yr_score;
+                color: #ebdbb2;
+                font-size: 60px;
+                font-family: "JetBrains Mono";
+                x: 30px;
+                y: scoreta.has-hover || !result_a ? -50px : 15px;
+                animate y {
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            pc := Text {
+                text: pc_score;
+                color: #ebdbb2;
+                font-size: 60px;
+                font-family: "JetBrains Mono";
+                x: parent.width - 68px;
+                y: scoreta.has-hover || !result_a ? -50px : 15px;
+                animate y {
+                    delay: 100ms;
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            Rectangle {
+                opacity: !result_a ? 1 : 0;
+                background: #282828;
+                Image {
+                    x: -79.7px;
+                    source: @image-url("./lose_back.png");
+                }
+
+                y: -85px;
+                height: 100px;
+                animate opacity {
+                    delay: 100ms;
+                    duration: 90ms;
+                }
+            }
+
+            Image {
+                visible: yr_pick == 2;
+                source: @image-url("./res_roc.png");
+                width: scoreta.has-hover || !result_a ? 45px : 25px;
+                x: scoreta.has-hover || !result_a ? 27px : 37px;
+                y: scoreta.has-hover || !result_a ? 25px : 85px;
+                animate width, y, x {
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            Image {
+                visible: yr_pick == 1;
+                source: @image-url("./res_sci.png");
+                width: scoreta.has-hover || !result_a ? 45px : 25px;
+                x: scoreta.has-hover || !result_a ? 25px : 35px;
+                y: scoreta.has-hover || !result_a ? 25px : 85px;
+                //80px;
+                animate width, y, x {
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            Image {
+                visible: yr_pick == 0;
+                source: @image-url("./res_pap.png");
+                width: scoreta.has-hover || !result_a ? 45px : 25px;
+                x: scoreta.has-hover || !result_a ? 29px : 39px;
+                y: scoreta.has-hover || !result_a ? 25px : 85px;
+                //80px;
+                animate width, y, x {
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            Image {
+                visible: pc_pick == 2;
+                source: @image-url("./res_roc.png");
+                width: scoreta.has-hover || !result_a ? 45px : 25px;
+                x: scoreta.has-hover || !result_a ? 104px : 114px;
+                y: scoreta.has-hover || !result_a ? 25px : 85px;
+                animate width, y, x {
+                    delay: 100ms;
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            Image {
+                visible: pc_pick == 1;
+                source: @image-url("./res_sci.png");
+                width: scoreta.has-hover || !result_a ? 45px : 25px;
+                x: scoreta.has-hover || !result_a ? 103px : 113px;
+                y: scoreta.has-hover || !result_a ? 25px : 85px;
+                animate width, y, x {
+                    delay: 100ms;
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            Image {
+                visible: pc_pick == 0;
+                source: @image-url("./res_pap.png");
+                width: scoreta.has-hover || !result_a ? 45px : 25px;
+                x: scoreta.has-hover || !result_a ? 107px : 115px;
+                y: scoreta.has-hover || !result_a ? 25px : 85px;
+                animate width, y, x {
+                    delay: 100ms;
+                    duration: 350ms;
+                    easing: ease-out-back;
+                }
+            }
+
+            scoreta := TouchArea { }
+        }
+
+        userFace := Rectangle {
+            visible: standing >= 6;
+            width: 125px;
+            background: #fe8019;
+            height: 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            x: 75px;
+            Image {
+                source: @image-url("./smiley.png");
+                width: 70px;
+            }
+        }
+
+        Rectangle {
+            visible: standing >= 2 && standing < 6;
+            width: 125px;
+            background: #fe8019;
+            height: 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            x: 75px;
+            Image {
+                source: @image-url("./slight_smile.png");
+                width: 70px;
+            }
+        }
+
+        Rectangle {
+            visible: standing < 2 && standing > -2;
+            width: 125px;
+            background: #fe8019;
+            height: 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            x: 75px;
+            Image {
+                source: @image-url("./neutral_face.png");
+                width: 70px;
+            }
+        }
+
+        Rectangle {
+            visible: standing > -5 && standing < -1;
+            width: 125px;
+            background: #fe8019;
+            height: 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            x: 75px;
+            Image {
+                source: @image-url("./disappointed.png");
+                width: 70px;
+            }
+        }
+
+        Rectangle {
+            visible: standing <= -5;
+            width: 125px;
+            background: #fe8019;
+            height: 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            x: 75px;
+            Image {
+                source: @image-url("./dizzy_face.png");
+                width: 70px;
+            }
+        }
+
+        Text {
+            text: "You";
+            font-family: "JetBrains Mono";
+            color: #ebdbb2;
+            x: userFace.x + (userFace.width - self.width) / 2;
+            y: 300px;
+            font-size: 17px;
+        }
+
+        Text {
+            text: "This PC";
+            font-family: "JetBrains Mono";
+            color: #ebdbb2;
+            x: pcFace.x + (pcFace.width - self.width) / 2;
+            y: 300px;
+            font-size: 17px;
+        }
+
         pcFace := Rectangle {
-            width : 125px;
-            x : root.width - 200px;
-            background : #fe8019;
-            height : 125px;
+            width: 125px;
+            x: root.width - 200px;
+            background: #fe8019;
+            height: 125px;
             border-radius: 30px;
             drop-shadow-blur: 50px;
             drop-shadow-color: #1d2021;
             Image {
-                source : @image-url("./pc.png");
-                width : 80px;
+                source: @image-url("./pc.png");
+                width: 80px;
+            }
+        }
+
+        nextBtn := Rectangle {
+            property <bool> next_passive: true;
+            background: nextta.pressed ? #e97617 : #fe8019;
+            height: nextta.pressed ? 55px : nextta.has-hover ? 60px : next_passive ? 40px : 55px;
+            width: nextta.pressed ? 115px : nextta.has-hover ? 130px : next_passive ? 95px : 115px;
+            y: nextta.pressed ? 345px : nextta.has-hover ? 340px : next_passive ? 360px : 345px;
+            opacity: next_passive ? 0 : 1;
+            border-radius: 20px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            Text {
+                font-family: "JetBrains Mono";
+                font-size: 25px;
+                color: #282828;
+                text: "Next";
+            }
+
+            nextta := TouchArea {
+                clicked => {
+                    result-out.running = true;
+                }
+            }
+
+            animate width, height, y, opacity, background {
+                duration: 350ms;
+                easing: ease-out-back;
+            }
+        }
+        Text {
+            text : "+1 to 'You'";
+            y : scoreta.has-hover ? 60px : 85px;
+            color : #ebdbb2;
+            font-size : 40px;
+            font-family : "JetBrains Mono";
+            animate y {
+                duration: 350ms;
+                easing : ease-out-back;
+            }
+        }
+        Text {
+            text : "bruh okay?";
+            y : scoreta.has-hover ? 105px : 130px;
+            color : #bdae93;
+            font-family : "JetBrains Mono";
+            animate y {
+                delay : 50ms;
+                duration : 350ms;
+                easing : ease-out-back;
             }
         }
     }
