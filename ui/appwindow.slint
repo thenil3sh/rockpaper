@@ -6,49 +6,49 @@ enum Weapon {
     Scissors,
 }
 
-component Hint {
-    property <string> text;
-    in-out property <bool> appear : false;
-    y : appear ? 20px : - hinttext.height - 30px;
-    Rectangle {
-        border-radius: 10px;
-        background : #d65d0e;
-        height : hinttext.height + 15px;
-        width : hinttext.width + 30px;
-        drop-shadow-blur: 50px;
-        drop-shadow-color: #1d2021;
-        drop-shadow-offset-y: 5px;
+// component Hint {
+//     property <string> text;
+//     in-out property <bool> appear : false;
+//     y : appear ? 20px : - hinttext.height - 30px;
+//     Rectangle {
+//         border-radius: 10px;
+//         background : #d65d0e;
+//         height : hinttext.height + 15px;
+//         width : hinttext.width + 30px;
+//         drop-shadow-blur: 50px;
+//         drop-shadow-color: #1d2021;
+//         drop-shadow-offset-y: 5px;
 
-        hinttext := Text {
-            wrap : word-wrap;
-            horizontal-alignment: center;
-            text : "! Hold what you choose !";
-            color : #282828;
-            max-width: 100px;
-            min-width: 20px;
-            font-family: "JetBrains Mono";
+//         hinttext := Text {
+//             wrap : word-wrap;
+//             horizontal-alignment: center;
+//             text : "! Hold what you choose !";
+//             color : #282828;
+//             max-width: 100px;
+//             min-width: 20px;
+//             font-family: "JetBrains Mono";
             
-        }
-    }
-    animate y {
-        duration : 500ms;
-        easing : ease-out-back;
-    }
-    Timer {
-        property <float> value : 0.0;
-        interval : 100ms;
-        running: appear;
-        triggered => {
-            value += 0.1;
-            if value >= 3.5 {
-                value = 0;
-                root.y = -hinttext.height - 30px;
-                appear = false;
-            }
-        }
-    }
+//         }
+//     }
+//     animate y {
+//         duration : 500ms;
+//         easing : ease-out-back;
+//     }
+//     Timer {
+//         property <float> value : 0.0;
+//         interval : 100ms;
+//         running: appear;
+//         triggered => {
+//             value += 0.1;
+//             if value >= 3.5 {
+//                 value = 0;
+//                 root.y = -hinttext.height - 30px;
+//                 appear = false;
+//             }
+//         }
+//     }
     
-}
+// }
 
 export component AppWindow inherits Window {
     callback picked(int);
@@ -85,6 +85,7 @@ export component AppWindow inherits Window {
         }
     }
     NextScreen := Rectangle {
+        visible : false;
         Rounder := Text {
             opacity : next_round_opacity;
             x : 337px;
@@ -300,7 +301,6 @@ export component AppWindow inherits Window {
             }
         }
     }
-
 
     property <int> weapon_time : 0;
     setupWep := Timer {
@@ -525,10 +525,44 @@ export component AppWindow inherits Window {
         }
 
         Text {
-            text: value;
+            text: value ;
             color: white;
             x: 0;
             y: 0;
+        }
+    }
+
+    resutlScr := Rectangle {
+        Timer {
+            interval : 100ms;
+        }
+
+        userFace := Rectangle {
+            width : 125px;
+            background : #fe8019;
+            height : 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            x : 75px;
+            Image {
+                source: @image-url("./Untitled(3).png");
+                width : 75px;
+            }
+        }
+
+        pcFace := Rectangle {
+            width : 125px;
+            x : root.width - 200px;
+            background : #fe8019;
+            height : 125px;
+            border-radius: 30px;
+            drop-shadow-blur: 50px;
+            drop-shadow-color: #1d2021;
+            Image {
+                source : @image-url("./pc.png");
+                width : 80px;
+            }
         }
     }
 }
