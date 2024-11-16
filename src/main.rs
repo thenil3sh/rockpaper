@@ -60,7 +60,7 @@ fn main() {
         };
 
         if *matches_clone.borrow() == *win_clone.borrow() {
-            todo!("lmao ok");
+            panic!("dnag it");
         }
 
         println!("You picked {}!! i see ya :D and i picked {}", pc_pick, weapon);
