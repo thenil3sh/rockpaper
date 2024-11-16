@@ -528,13 +528,6 @@ export component AppWindow inherits Window {
             font-family: "JetBrains Mono";
             font-size: 15px;
         }
-
-        Text {
-            text: value;
-            color: white;
-            x: 0;
-            y: 0;
-        }
     }
 
     resutlScr := Rectangle {
@@ -596,6 +589,8 @@ export component AppWindow inherits Window {
                     nextBtn.next_passive = true;
                     resutlScr.opacity = 0;
                 } else if value == 7 {
+                    winText.opacity = 0;
+                    subtext.opacity = 0;
                 } else if value == 10 {
                     resutlScr.visible = false;
                     WeaponScreen.visible = true;
@@ -621,6 +616,9 @@ export component AppWindow inherits Window {
                     passive = false;
                 } else if result_time == 20 {
                     result_a = true;
+                } else if result_time == 25 {
+                    winText.opacity = 1;
+                    subtext.opacity = 1;
                 } else if result_time > 25 {
                     nextBtn.next_passive = false;
                     result_time = 0;
@@ -899,23 +897,25 @@ export component AppWindow inherits Window {
                 easing: ease-out-back;
             }
         }
-        Text {
+        winText := Text {
+            opacity : 0;
             text : "+1 to 'You'";
             y : scoreta.has-hover ? 60px : 85px;
             color : #ebdbb2;
             font-size : 40px;
             font-family : "JetBrains Mono";
-            animate y {
+            animate y, opacity {
                 duration: 350ms;
                 easing : ease-out-back;
             }
         }
-        Text {
+        subtext := Text {
+            opacity : 0;
             text : "bruh okay?";
             y : scoreta.has-hover ? 105px : 130px;
             color : #bdae93;
             font-family : "JetBrains Mono";
-            animate y {
+            animate y, opacity {
                 delay : 50ms;
                 duration : 350ms;
                 easing : ease-out-back;
