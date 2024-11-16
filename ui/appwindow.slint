@@ -1,5 +1,10 @@
 import "./JetBrainsMono-Regular.ttf";
 import "./JetBrainsMono-Regular.ttf";
+import "./PixelifySans-Bold.ttf"; 
+import "./PixelifySans-Medium.ttf";
+import "./PixelifySans-SemiBold.ttf";
+import "./PixelifySans-Regular.ttf";
+
 enum Weapon {
     Rock,
     Paper,
@@ -104,7 +109,7 @@ export component AppWindow inherits Window {
             //51px;//84px;//117px;//150px;
             horizontal-alignment: center;
             font-size: 25px;
-            font-family: "JetBrains Mono NL";
+            font-family: "JetBrains Mono";
             color: #d65d0e;
             text: "_\na\n2\n5\n9";
             rounds := TouchArea {
@@ -147,7 +152,7 @@ export component AppWindow inherits Window {
             y: 150px;
             text: "Next round for   win(s) ?";
             font-size: 25px;
-            font-family: "JetBrains Mono NL";
+            font-family: "JetBrains Mono";
             color: #ebdbb2;
             animate opacity {
                 duration: 250ms;
@@ -410,8 +415,8 @@ export component AppWindow inherits Window {
                 rotation-origin-y: 60px;
 
                 animate rotation-angle {
-                    duration: 250ms;
-                    easing: ease-out-bounce;
+                    duration: 100ms;
+                    easing: ease-out;
                 }
             }
 
@@ -454,8 +459,8 @@ export component AppWindow inherits Window {
                 rotation-origin-y: 50px;
                 width: 60px;
                 animate rotation-angle, opacity {
-                    duration: 250ms;
-                    easing: ease-in-out-back;
+                    duration: 100ms;
+                    easing: ease-out;
                 }
             }
 
@@ -496,8 +501,8 @@ export component AppWindow inherits Window {
                 width: 65px;
                 rotation-origin-y: 55px;
                 animate rotation-angle {
-                    duration: 250ms;
-                    easing: ease-in-out-back;
+                    duration: 100ms;
+                    easing: ease-out;
                 }
             }
 
@@ -640,6 +645,7 @@ export component AppWindow inherits Window {
             width: 175px;
             height: 100px;
             you := Text {
+                opacity : !result_a ? 0 : 1;
                 text: yr_score;
                 color: #ebdbb2;
                 font-size: 60px;
@@ -653,6 +659,7 @@ export component AppWindow inherits Window {
             }
 
             pc := Text {
+                opacity : !result_a ? 0 : 1;
                 text: pc_score;
                 color: #ebdbb2;
                 font-size: 60px;
@@ -922,4 +929,201 @@ export component AppWindow inherits Window {
             }
         }
     }
+    property <string> pcString : "it's a draw";
+    property <int> time : 0;
+    property <int> win : 2;
+    
+    overTimer := Timer {
+        interval : 100ms;
+        running : false;
+        triggered => {
+            time += 1;
+            if time == 2 {
+                GameOverScr.visible = true;
+                
+            } else if time == 3 {
+                GameOverScr.opacity = 1;
+                GameOverScr.y = 0; 
+            }
+            if time == 6 {
+                gradBack.y = -250px;
+                Roundovertext.opacity = 0;
+                Roundovertext.y = 200px; 
+            } else if time == 7 {
+                YOU.opacity = 1;
+            } else if time == 12 {
+                
+            } else if time == 16 {
+                YOU.y = 130px;
+                YOU.text = "you";
+                if win == 1 {
+                    YOU.font-family = "Pixelify Sans";
+                }
+                win-lost.font-weight = win == 1 ? 100 : win == 0 ? 600 : 300;
+                f-lose-back.opacity = 0;
+                win-lost.font-size = win == 1 ? 70px : win == 0 ? 50px : 25px;
+                win-lost.y = win == 1 ? 200px : win == 0 ? 210px : 225px;
+                win-lost.opacity = 1;
+                gradBack.y = -450px;
+                gradResBack.y = -350px;
+            } else if time == 17{
+                if win == 1{
+                    win-lost.font-family = "Pixelify Sans";
+                    YOU.font-weight = 300;
+                
+                win-lost.font-weight = 300;
+                }
+            } else if time == 18{
+                if win == 1{
+                f_win_back.opacity = 1;
+                win-lost.font-weight = 500;
+                YOU.font-weight = 500;
+            } else if win == 2 {
+                f-lose-back.opacity = 1;
+            subText.y = 260px;
+            subText.opacity = 1;
+            } else {
+                f-lose-back.opacity = 1;
+                subText.opacity = 1;
+            }
+            } else if time >= 19 && Math.mod(time, 4) == 3 {
+                YOU.text = "you";
+                if win == 1{
+                win-lost.font-size = 73px;
+                YOU.font-size= 73px;
+                win-lost.font-weight = 900;
+                YOU.font-weight = 900;
+                }
+            } else if time >= 20 && Math.mod(time, 4) == 0 {
+                if win == 1{
+                win-lost.font-size = 70px;
+                YOU.font-size= 70px;
+                win-lost.font-weight = 100;
+                YOU.font-weight = 100;
+                }
+            }else if time >= 21 && Math.mod(time, 4) == 1 {
+                if win == 1{
+                win-lost.font-size = 71px;
+                YOU.font-size = 71px;
+                YOU.font-weight= 350;
+                win-lost.font-weight = 350;
+                }
+            } else if time >= 22 && Math.mod(time, 4) == 2 {
+                if win == 1{
+                win-lost.font-size = 72px;
+                YOU.font-size= 72px;
+                win-lost.font-weight = 600;
+                YOU.font-weight = 600;
+                }
+            }
+        }
+    }
+    GameOverScr := Rectangle {
+        animate y, opacity {
+            duration : 250ms;
+            easing : ease-out-back;
+        }
+        visible : false;
+        opacity : 0;
+        gradResBack := Rectangle {
+            y : 450px;
+            height : 450px * 1.5;
+            background: win == 1 ? @linear-gradient(180deg, rgba(40, 40, 40,0) 0%, rgba(104, 157, 106,1) 36%, rgba(104, 157, 106,0.7763306005996149) 54%, rgba(40,40,40,0) 100%) : win == 0 ? @linear-gradient(180deg, rgba(40, 40, 40,0) 0%, rgba(204, 35, 29,1) 36%, rgba(204, 35, 29,0.7763306005996149) 54%, rgba(40,40,40,0) 100%) : @linear-gradient(180deg, rgba(80,73,69,0) 0%, rgba(80,73,69,1) 36%, rgba(80,73,69,0.7763306005996149) 54%, rgba(40,40,40,0) 100%);
+            opacity : win == 1 || win == 0 ? 0.3 : 0.5 ;
+            animate y {
+                duration: 1000ms;
+                easing : ease-out-back;
+            }
+        }
+        f_win_back := Image {
+            opacity : 0;
+            source : @image-url("./win_back.png");
+            animate opacity {
+                duration : 200ms;
+            }
+        }
+
+        gradBack := Rectangle {
+            y : 450px;
+            height : root.height * 1.2;
+            width : root.width * 2;
+            background : @linear-gradient(180deg, rgba(80,73,69,0) 0%, rgba(80,73,69,1) 36%, rgba(80,73,69,0.7763306005996149) 54%, rgba(40,40,40,0) 100%);
+            
+            animate y {
+                duration: 1000ms;
+                easing: ease-out-back;
+            }
+        }
+        f_lose_back := Image {
+            opacity : 1;
+            source: @image-url("./lose_back.png");
+            animate opacity {
+                duration : 200ms;
+                easing : ease-out;
+            }
+        }
+
+        win_lost := Text {
+            text : win == 1 ? "win!" : win == 0 ? "lost" : "didn't win";
+            y : 275px;
+            opacity: 0;
+            font-size : 70px;
+            font-family : "JetBrains Mono";
+            color : #ebdbb2;
+            animate y, opacity, color {
+                duration : 500ms;
+                easing: ease-out-back;
+            }
+            animate font-size {
+                duration : 400ms;
+                easing : ease-out-back;
+            }
+        }
+        subText := Text {
+            horizontal-alignment: center;
+            y : 280px;
+            opacity : 0;
+            font-size : 22px;
+            font-weight : 100;
+            text : pcString;
+            color : #a89984;
+            font-family : "JetBrains Mono";
+            animate opacity, y {
+                delay : 500ms;
+                duration : 250ms;
+                easing : ease-out-quad;
+            }
+        }
+        background : #282828;
+        Roundovertext := Text {
+            visible : true;
+            text : "Round over!";
+            font-size: 50px;
+            font-family: "JetBrains Mono";
+            color : #ebdbb2;
+
+            animate opacity, y {
+                 duration : 250ms;
+                 easing : ease-out-back;
+            }
+        }
+        YOU := Text {
+            text : "you";
+            opacity: 0;
+            font-size : 70px;
+            font-family : "JetBrains Mono";
+            color : #ebdbb2;
+            animate y {
+                duration : 500ms;
+                easing: ease-out-back;
+            }
+        }
+
+    }
+    overTa := TouchArea{
+        clicked => {
+            overTimer.running = true;
+        }
+    }
 }
+
