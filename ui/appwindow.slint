@@ -56,6 +56,7 @@ enum Weapon {
 // }
 
 export component AppWindow inherits Window {
+    icon : @image-url("./icon.png");
     callback picked(int);
     in property <bool> imgVis: true;
     in property <int> winning;
@@ -931,7 +932,7 @@ export component AppWindow inherits Window {
     }
     property <string> pcString : "it's a draw";
     property <int> time : 0;
-    property <int> win : 2;
+    property <int> win : 1;
     
     overTimer := Timer {
         interval : 100ms;

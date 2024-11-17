@@ -1,9 +1,11 @@
+#![windows_subsystem = "windows"]
 use slint;
 use std::cell::RefCell; 
 use std::rc::Rc;
 
 use rand::{seq::SliceRandom, thread_rng};
 slint::include_modules!();
+
 fn main() {
     let window = AppWindow::new().unwrap();
     let matches_left = Rc::new(RefCell::new(0));
