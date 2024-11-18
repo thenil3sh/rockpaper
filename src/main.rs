@@ -24,8 +24,8 @@ fn main() {
     let yr_clone = Rc::clone(&yt_score);
     let pc_clone = Rc::clone(&pc_score);
     let win_clone = Rc::clone(&win_count);
-    window.on_picked(move |weapon| {
-        let mut yr_score = yr_clone.borrow_mut();
+    window.on_picked(move |weapon| { //crank that
+          let mut yr_score = yr_clone.borrow_mut();
         let mut pc_score = pc_clone.borrow_mut();
         let app = picked.upgrade().unwrap();
         let pc_pick = *[0, 1, 2].choose(&mut rand::thread_rng()).unwrap();
