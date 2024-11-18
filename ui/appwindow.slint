@@ -58,6 +58,7 @@ enum Weapon {
 export component AppWindow inherits Window {
     callback picked(int);
     in property <bool> imgVis: true;
+    in property <bool> game_over : false;
     in property <int> winning;
     property <color> testcolor: #282828;
     property <bool> weapon_pressed: ta.pressed || ta2.pressed || ta3.pressed;
@@ -72,6 +73,7 @@ export component AppWindow inherits Window {
     in property <int> yr_pick: 0;
     in property <int> pc_pick: 0;
     in property <bool> last_round : false;
+    in property <string> result_text;
 
     callback match_selected(int);
     callback setup_table();
@@ -96,6 +98,7 @@ export component AppWindow inherits Window {
             NextScreen.visible = false;
             WeaponScreen.visible = true;
             WeaponScreen.opacity = 1;
+            WeaponScreen.passive = false;
             self.running = false;
         }
     }
@@ -342,10 +345,10 @@ export component AppWindow inherits Window {
 
     in property <int> weapon_opacity: 0;
     WeaponScreen := Rectangle {
-        property <bool> passive: false;
+        property <bool> passive: true;
         visible: false;
         opacity: weapon_opacity;
-        animate opacity { duration: 100ms; }
+        animate opacity { duration: 200ms; }
         Text {
             horizontal-alignment: center;
             color: #fe8019;
@@ -369,7 +372,7 @@ export component AppWindow inherits Window {
             color: #8ec07c;
             font-family: "JetBrains Mono";
             text: "   \n 3 \n 2 \n 1 \n";
-            animate y {
+            animate y, opacity {
                 duration: 500ms;
                 easing: ease-in-out-back;
             }
@@ -594,12 +597,17 @@ export component AppWindow inherits Window {
                     nextBtn.next_passive = true;
                     resutlScr.opacity = 0;
                 } else if value == 7 {
+                    GameOverScr.visible = game_over;
+                    GameOverScr.opacity = game_over ? 1 : 0;
+                    GameOverScr.y = game_over ? 0px : 450px;
                     winText.opacity = 0;
                     subtext.opacity = 0;
                 } else if value == 10 {
                     resutlScr.visible = false;
-                    WeaponScreen.visible = true;
-                    WeaponScreen.passive = false;
+                    WeaponScreen.visible = !game_over;
+                    WeaponScreen.passive = !WeaponScreen.visible;
+                } else if value == 15 {
+                    overTimer.running = game_over;
                     value = 0;
                     self.running = false;
                 }
@@ -648,11 +656,11 @@ export component AppWindow inherits Window {
                 opacity : !result_a ? 0 : 1;
                 text: yr_score;
                 color: #ebdbb2;
-                font-size: 60px;
+                font-size: scoreta.has-hover ? 30px : 60px;
                 font-family: "JetBrains Mono";
-                x: 30px;
-                y: scoreta.has-hover || !result_a ? -50px : 15px;
-                animate y {
+                x: scoreta.has-hover ? 41px : 30px;
+                y: !result_a ? -50px : scoreta.has-hover ? -15px : 15px;
+                animate y, font-size, x {
                     duration: 350ms;
                     easing: ease-out-back;
                 }
@@ -662,11 +670,11 @@ export component AppWindow inherits Window {
                 opacity : !result_a ? 0 : 1;
                 text: pc_score;
                 color: #ebdbb2;
-                font-size: 60px;
+                font-size: scoreta.has-hover ? 30px : 60px;
                 font-family: "JetBrains Mono";
-                x: parent.width - 68px;
-                y: scoreta.has-hover || !result_a ? -50px : 15px;
-                animate y {
+                x: parent.width - (scoreta.has-hover ? 57px : 68px);
+                y: !result_a ? -50px : scoreta.has-hover ? -15px : 15px;
+                animate y, font-size, x {
                     delay: 100ms;
                     duration: 350ms;
                     easing: ease-out-back;
@@ -904,9 +912,10 @@ export component AppWindow inherits Window {
                 easing: ease-out-back;
             }
         }
+        
         winText := Text {
             opacity : 0;
-            text : "+1 to 'You'";
+            text : result_text;
             y : scoreta.has-hover ? 60px : 85px;
             color : #ebdbb2;
             font-size : 40px;
@@ -916,36 +925,30 @@ export component AppWindow inherits Window {
                 easing : ease-out-back;
             }
         }
-        subtext := Text {
-            opacity : 0;
-            text : "bruh okay?";
-            y : scoreta.has-hover ? 105px : 130px;
-            color : #bdae93;
-            font-family : "JetBrains Mono";
-            animate y, opacity {
-                delay : 50ms;
-                duration : 350ms;
-                easing : ease-out-back;
-            }
-        }
+        // subtext := Text {////////////////////////////////////////////////////neeeds attention!!
+        //     opacity : 0;
+        //     text : "bruh okay?";
+        //     y : scoreta.has-hover ? 105px : 130px;
+        //     color : #bdae93;
+        //     font-family : "JetBrains Mono";
+        //     animate y, opacity {
+        //         delay : 50ms;
+        //         duration : 350ms;
+        //         easing : ease-out-back;
+        //     }
+        // }
     }
-    property <string> pcString : "it's a draw";
+    in property <string> pcString : "Sad :(";
     property <int> time : 0;
-    property <int> win : 2;
+    in property <int> win : 1;
     
     overTimer := Timer {
         interval : 100ms;
         running : false;
         triggered => {
             time += 1;
-            if time == 2 {
-                GameOverScr.visible = true;
-                
-            } else if time == 3 {
-                GameOverScr.opacity = 1;
-                GameOverScr.y = 0; 
-            }
             if time == 6 {
+
                 gradBack.y = -250px;
                 Roundovertext.opacity = 0;
                 Roundovertext.y = 200px; 
@@ -998,8 +1001,8 @@ export component AppWindow inherits Window {
                 if win == 1{
                 win-lost.font-size = 70px;
                 YOU.font-size= 70px;
-                win-lost.font-weight = 100;
                 YOU.font-weight = 100;
+                win-lost.font-weight = 100;
                 }
             }else if time >= 21 && Math.mod(time, 4) == 1 {
                 if win == 1{
@@ -1012,17 +1015,19 @@ export component AppWindow inherits Window {
                 if win == 1{
                 win-lost.font-size = 72px;
                 YOU.font-size= 72px;
-                win-lost.font-weight = 600;
                 YOU.font-weight = 600;
+                win-lost.font-weight = 600;
                 }
             }
         }
     }
     GameOverScr := Rectangle {
+        y : 100px;
         animate y, opacity {
-            duration : 250ms;
+            duration : 300ms;
             easing : ease-out-back;
         }
+        height : 600px;
         visible : false;
         opacity : 0;
         gradResBack := Rectangle {
@@ -1036,6 +1041,7 @@ export component AppWindow inherits Window {
             }
         }
         f_win_back := Image {
+            y : 0;
             opacity : 0;
             source : @image-url("./win_back.png");
             animate opacity {
@@ -1055,6 +1061,7 @@ export component AppWindow inherits Window {
             }
         }
         f_lose_back := Image {
+            y : 0;
             opacity : 1;
             source: @image-url("./lose_back.png");
             animate opacity {
@@ -1088,8 +1095,12 @@ export component AppWindow inherits Window {
             text : pcString;
             color : #a89984;
             font-family : "JetBrains Mono";
-            animate opacity, y {
-                delay : 500ms;
+            animate opacity {
+                delay : 850ms;
+                duration : 250ms;
+            }
+            animate y {
+                delay : 750ms;
                 duration : 250ms;
                 easing : ease-out-quad;
             }
@@ -1097,6 +1108,7 @@ export component AppWindow inherits Window {
         background : #282828;
         Roundovertext := Text {
             visible : true;
+            y : (root.height - self.height)/2;
             text : "Round over!";
             font-size: 50px;
             font-family: "JetBrains Mono";
@@ -1110,6 +1122,7 @@ export component AppWindow inherits Window {
         YOU := Text {
             text : "you";
             opacity: 0;
+            y : (root.height - self.height)/2;
             font-size : 70px;
             font-family : "JetBrains Mono";
             color : #ebdbb2;
@@ -1120,10 +1133,13 @@ export component AppWindow inherits Window {
         }
 
     }
-    overTa := TouchArea{
-        clicked => {
-            overTimer.running = true;
-        }
-    }
+    // Text {
+    //     text : game_over ? "true" : "false";
+    // }
+    // overTa := TouchArea{
+    //     clicked => {
+    //         overTimer.running = true;
+    //     }
+    // }
 }
 
