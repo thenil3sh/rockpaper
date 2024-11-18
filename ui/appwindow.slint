@@ -601,7 +601,7 @@ export component AppWindow inherits Window {
                     GameOverScr.opacity = game_over ? 1 : 0;
                     GameOverScr.y = game_over ? 0px : 450px;
                     winText.opacity = 0;
-                    subtext.opacity = 0;
+                    //subtext.opacity = 0;
                 } else if value == 10 {
                     resutlScr.visible = false;
                     WeaponScreen.visible = !game_over;
@@ -631,7 +631,7 @@ export component AppWindow inherits Window {
                     result_a = true;
                 } else if result_time == 25 {
                     winText.opacity = 1;
-                    subtext.opacity = 1;
+                    //subtext.opacity = 1;
                 } else if result_time > 25 {
                     nextBtn.next_passive = false;
                     result_time = 0;
