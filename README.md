@@ -14,8 +14,14 @@ As obvious, this projects has a release page where you can download the project 
 - `Rustup toolchain` ([installation_guide](https://rust-lang.github.io/rustup/installation/index.html))
 
 2. Clone this repository using `git` into your desired directory : \
-```git clone https://github.com/oreo3494/rockpaper.git```
+```shell
+git clone https://github.com/oreo3494/rockpaper.git
+```
 
 3. Hop into this directory (`cd`) and then build the project with cargo : \
-```cd rockpaper-master``` \
-```cargo build --release```
+```shell
+cd rockpaper-master
+``` 
+```
+cargo build --release
+```
