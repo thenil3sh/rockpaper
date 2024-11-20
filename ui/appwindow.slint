@@ -167,8 +167,8 @@ export component AppWindow inherits Window {
             y: start_passive ? 350px : Start.pressed ? 300px : Start.has-hover ? 295px : 300px;
             opacity: start_passive ? 0 : 1;
             background: start_passive ? #d65d0e00 : #d65d0e;
-            drop-shadow-blur: start_passive ? 15px : 100px;
-            drop-shadow-color: #1d2021;
+            drop-shadow-blur: start_passive ? 15px : 30px;
+            drop-shadow-color: #1d2021c1;
             width: start_passive ? 100px : Start.pressed ? 140px : Start.has-hover ? 150px : 140px;
             border-radius: 15px;
             height: start_passive ? 30px : Start.pressed ? 65px : Start.has-hover ? 75px : 65px;
@@ -352,7 +352,7 @@ export component AppWindow inherits Window {
         Text {
             horizontal-alignment: center;
             color: #fe8019;
-            text: " . . .\n\n  Rock  \n\n Paper\n\nScissors";
+            text: " . . .\n\nRock\n\nPaper\n\nScissors\n";
             opacity: 100%;
             font-size: 20px;
             x: (root.width - self.width) / 2;
@@ -371,7 +371,7 @@ export component AppWindow inherits Window {
             font-size: 40px;
             color: #8ec07c;
             font-family: "JetBrains Mono";
-            text: "   \n 3 \n 2 \n 1 \n";
+            text: " \n3\n2\n1\n";
             animate y, opacity {
                 duration: 500ms;
                 easing: ease-in-out-back;
@@ -405,7 +405,7 @@ export component AppWindow inherits Window {
         width: ta2.has-hover ? 137.5px : 125px;
             height: ta2.has-hover ? 137.5px : 125px;
             border-radius: 25px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: ta2.has-hover ? #fe801910 : #1d2021;
             x: ta2.has-hover ? 399.75px : 389.25px;
             y: ta2.has-hover ? 141.25px : passive ? 200px : 162.5px;
@@ -451,7 +451,7 @@ export component AppWindow inherits Window {
         width: ta3.has-hover ? 137.5px : 125px;
             height: ta3.has-hover ? 137.5px : 125px;
             border-radius: 25px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: ta3.has-hover ? #fe801910 : #1d2021;
             x: rockx;
             y: rocky;
@@ -491,7 +491,7 @@ export component AppWindow inherits Window {
             width: ta.has-hover ? 137.5px : 125px;
             height: ta.has-hover ? 137.5px : 125px;
             border-radius: 25px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: ta.has-hover ? #fe801910 : #1d2021;
             x: ta.has-hover ? 231.25px : 237.5px;
             y: ta.has-hover ? 141.25px : passive ? 200px : 162.5px;
@@ -783,7 +783,7 @@ export component AppWindow inherits Window {
             background: #fe8019;
             height: 125px;
             border-radius: 30px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             x: 75px;
             Image {
@@ -798,7 +798,7 @@ export component AppWindow inherits Window {
             background: #fe8019;
             height: 125px;
             border-radius: 30px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             x: 75px;
             Image {
@@ -813,7 +813,7 @@ export component AppWindow inherits Window {
             background: #fe8019;
             height: 125px;
             border-radius: 30px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             x: 75px;
             Image {
@@ -828,7 +828,7 @@ export component AppWindow inherits Window {
             background: #fe8019;
             height: 125px;
             border-radius: 30px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             x: 75px;
             Image {
@@ -843,7 +843,7 @@ export component AppWindow inherits Window {
             background: #fe8019;
             height: 125px;
             border-radius: 30px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             x: 75px;
             Image {
@@ -876,7 +876,7 @@ export component AppWindow inherits Window {
             background: #fe8019;
             height: 125px;
             border-radius: 30px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             Image {
                 source: @image-url("./pc.png");
@@ -892,7 +892,7 @@ export component AppWindow inherits Window {
             y: nextta.pressed ? 345px : nextta.has-hover ? 340px : next_passive ? 360px : 345px;
             opacity: next_passive ? 0 : 1;
             border-radius: 20px;
-            drop-shadow-blur: 50px;
+            drop-shadow-blur: 30px;
             drop-shadow-color: #1d2021;
             Text {
                 font-family: "JetBrains Mono";

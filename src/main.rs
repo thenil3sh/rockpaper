@@ -88,5 +88,4 @@ fn main() {
     });
 
     window.run().unwrap();
-    println!("Hello, world!");
 }
