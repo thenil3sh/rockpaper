@@ -1,8 +1,8 @@
+#![windows_subsystem = "windows"]
 use rand::rngs::ThreadRng;
 use slint::{self, SharedString};
 use std::cell::RefCell; 
 use std::rc::Rc;
-
 use rand::seq::SliceRandom;
 slint::include_modules!();
 
