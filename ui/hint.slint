@@ -1,22 +1,56 @@
 import "JetBrainsMono-Regular.ttf";
 component Hint {
-    property <string> text : "* Hold on what you pick! *";
+    property <string> text: "* Hold on what you pick! *";
+    property <bool> show : ta.has-hover || ta-cross.has-hover;
     Rectangle {
-    background: #282828;
-    Rectangle {
-        height : content.height + 9px;
-        width : content.width + 25px;
-        background: #d65d0e;
-        border-radius : 10px;
-        content := Text {
-            color: #3c3836;
-            font-size: 15px;
-            font-weight: 550;
-            text : text;
-            horizontal-alignment: center;
-            vertical-alignment: center;
-            font-family: "JetBrains Mono";
+        btn := Rectangle {
+            drop-shadow-blur: 20px;
+            drop-shadow-color: #1d2021;
+            x: hint.x + hint.width + (show ? 5px : - self.width) - 2px;
+            y: hint.y + (ta-cross.has-hover ? -2.5px : 0);
+            height: content.height + (ta-cross.has-hover ? 20px : 15px);
+            width: content.height + (ta-cross.has-hover ? 20px : 15px);
+            background: ta-cross.pressed ? #d65d0e : ta-cross.has-hover ? #fe8019 : #d65d0e;
+            border-radius: 10px;
+            opacity : show ? 1 : 0;
+            animate x, color, height, width, y, opacity {
+                duration: 300ms;
+                easing: ease-out-back;
+            }
         }
-    }
+        background: #282828;
+        hint := Rectangle {
+            x: (root.width - self.width) / 2 + (show ? -btn.width / 2 : 0);
+            height: content.height + 15px;
+            width: content.width + 25px;
+            background: #d65d0e;
+            border-radius: 10px;
+            drop-shadow-blur: 20px;
+            drop-shadow-color: #1d2021;
+            content := Text {
+                color: #3c3836;
+                font-size: 15px;
+                font-weight: 550;
+                text: text;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                font-family: "JetBrains Mono";
+            }
+
+            animate x {
+                duration: 300ms;
+                easing: ease-out-back;
+            }
+        }
+
+        ta := TouchArea { }
+        ta_cross := TouchArea {
+            x : btn.x;
+            y : btn.y;
+            height : btn.height;
+            width : btn.width;
+        }
+
+        Rectangle { }
     }
 }
