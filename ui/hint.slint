@@ -1,0 +1,22 @@
+import "JetBrainsMono-Regular.ttf";
+component Hint {
+    property <string> text : "* Hold on what you pick! *";
+    Rectangle {
+    background: #282828;
+    Rectangle {
+        height : content.height + 9px;
+        width : content.width + 25px;
+        background: #d65d0e;
+        border-radius : 10px;
+        content := Text {
+            color: #3c3836;
+            font-size: 15px;
+            font-weight: 550;
+            text : text;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            font-family: "JetBrains Mono";
+        }
+    }
+    }
+}
