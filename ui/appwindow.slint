@@ -113,9 +113,10 @@ export component AppWindow inherits Window {
             //51px;//84px;//117px;//150px;
             horizontal-alignment: center;
             font-size: 25px;
+            width : 30px;
             font-family: "JetBrains Mono";
             color: #d65d0e;
-            text: "_\na\n2\n5\n9";
+            text: "_\na\n2\n5\n9\n";
             rounds := TouchArea {
                 clicked() => {
                     if self.pressed-y > 0 && self.pressed-y < 33px {
@@ -360,7 +361,7 @@ export component AppWindow inherits Window {
             y: root.height * 3 / 4 + (ta3.has-hover ? - 42px : ta.has-hover ? - 96px : ta2.has-hover ? - 150px : 10px);
             font-family: "JetBrains Mono";
             animate y {
-                duration: 500ms;
+                duration: 250ms;
                 delay: 200ms;
                 easing: ease-out-quad;
             }
@@ -370,6 +371,7 @@ export component AppWindow inherits Window {
             opacity: weapon_pressed ? 1 : 0;
             horizontal-alignment: center;
             font-size: 40px;
+            width : 40px;
             color: #8ec07c;
             font-family: "JetBrains Mono";
             text: " \n3\n2\n1\n";

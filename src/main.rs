@@ -11,8 +11,8 @@ const WIN_TEXT : [&str; 4] = ["+1 goes to 'you'","PC lost it", "+1!!!", "+0 goes
 const LOSE_TEXT : [&str;5] = ["PC gets +1", "+1 goes to 'PC'", "0 goes to 'you'", "+0!!!", "0_0"];
 const DRAW_TEXT : [&str;5] = ["both get +1", "draw!", "your hand = pc hand", "🤝", "draw"];
 
-
-fn main() {
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen::prelude::wasm_bindgen(start))]
+pub fn main() {
     let window = AppWindow::new().unwrap();
     let matches_left = Rc::new(RefCell::new(0));
     let pc_score = Rc::new(RefCell::new(0));
