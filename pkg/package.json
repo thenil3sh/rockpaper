@@ -1,0 +1,15 @@
+{
+  "name": "rockpaper",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "rockpaper_bg.wasm",
+    "rockpaper.js",
+    "rockpaper.d.ts"
+  ],
+  "main": "rockpaper.js",
+  "types": "rockpaper.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
