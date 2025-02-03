@@ -1,5 +1,4 @@
 #![windows_subsystem = "windows"]
-use rand::rngs::ThreadRng;
 use slint::{self, SharedString};
 use std::cell::RefCell; 
 use std::rc::Rc;
@@ -44,9 +43,7 @@ pub fn main() {
             *pc_score += 1;
             *yr_score += 1;
             app.set_result_text(SharedString::from(*DRAW_TEXT.choose(&mut rand::thread_rng()).unwrap()));
-            match weapon {
-                x => x + 2,
-            }
+            weapon + 2
         } else {
             panic!("Again whatt??");
         });
